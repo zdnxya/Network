@@ -4,468 +4,441 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Networking Landscape</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a25;
-    --border: rgba(255,255,255,0.07);
-    --border-hover: rgba(255,255,255,0.15);
-    --text: #e8e8f0;
-    --text-muted: #7a7a9a;
-    --text-dim: #3a3a5a;
+    --bg:       #08090d;
+    --surface:  #0f1117;
+    --surface2: #161820;
+    --border:   rgba(255,255,255,0.06);
+    --border-h: rgba(255,255,255,0.13);
+    --text:     #dddde8;
+    --muted:    #6e6e88;
+    --dim:      #2e2e45;
 
-    --c1: #6c63ff; --c1l: #a09aff; --c1bg: rgba(108,99,255,0.1); --c1b: rgba(108,99,255,0.25);
-    --c2: #00d4aa; --c2l: #5eefd4; --c2bg: rgba(0,212,170,0.08); --c2b: rgba(0,212,170,0.2);
-    --c3: #ff9f43; --c3l: #ffbe76; --c3bg: rgba(255,159,67,0.08); --c3b: rgba(255,159,67,0.2);
-    --c4: #a855f7; --c4l: #d09aff; --c4bg: rgba(168,85,247,0.08); --c4b: rgba(168,85,247,0.2);
-    --c5: #ef4444; --c5l: #f87171; --c5bg: rgba(239,68,68,0.08); --c5b: rgba(239,68,68,0.2);
-    --c6: #3b82f6; --c6l: #93c5fd; --c6bg: rgba(59,130,246,0.08); --c6b: rgba(59,130,246,0.2);
-    --c7: #ec4899; --c7l: #f9a8d4; --c7bg: rgba(236,72,153,0.08); --c7b: rgba(236,72,153,0.2);
-    --c8: #84cc16; --c8l: #bef264; --c8bg: rgba(132,204,22,0.08); --c8b: rgba(132,204,22,0.2);
+    --c1:  #7c6fff; --c1l: #b0a8ff; --c1bg: rgba(124,111,255,.09); --c1b: rgba(124,111,255,.22);
+    --c2:  #00c9a0; --c2l: #52e8c6; --c2bg: rgba(0,201,160,.07);   --c2b: rgba(0,201,160,.18);
+    --c3:  #f59e0b; --c3l: #fcd06a; --c3bg: rgba(245,158,11,.07);  --c3b: rgba(245,158,11,.18);
+    --c4:  #a855f7; --c4l: #d4a0ff; --c4bg: rgba(168,85,247,.08);  --c4b: rgba(168,85,247,.2);
+    --c5:  #f43f5e; --c5l: #fb8fa3; --c5bg: rgba(244,63,94,.08);   --c5b: rgba(244,63,94,.2);
+    --c6:  #3b82f6; --c6l: #93bbfd; --c6bg: rgba(59,130,246,.08);  --c6b: rgba(59,130,246,.2);
+    --c7:  #ec4899; --c7l: #f9a8d4; --c7bg: rgba(236,72,153,.07);  --c7b: rgba(236,72,153,.18);
+    --c8:  #22c55e; --c8l: #86efac; --c8bg: rgba(34,197,94,.07);   --c8b: rgba(34,197,94,.18);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.65;
     min-height: 100vh;
   }
 
+  /* Subtle grid background */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 48px 48px;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.4;
   }
 
   .wrap {
     position: relative;
     z-index: 1;
-    max-width: 860px;
+    max-width: 820px;
     margin: 0 auto;
-    padding: 60px 24px 80px;
+    padding: 72px 28px 100px;
   }
 
-  .header { margin-bottom: 56px; }
+  /* ── Header ── */
+  .header {
+    margin-bottom: 64px;
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 48px;
+  }
 
   .eyebrow {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
+    font-weight: 500;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 16px;
+    color: var(--dim);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--dim);
   }
 
   h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(36px, 6vw, 60px);
-    font-weight: 800;
-    line-height: 1.05;
+    font-family:  serif;
+    font-size: clamp(40px, 7vw, 68px);
+    font-weight: 300;
+    line-height: 1.0;
     letter-spacing: -0.02em;
-    margin-bottom: 20px;
+    margin-bottom: 6px;
+    color: var(--text);
   }
 
-  h1 span {
-    background: linear-gradient(135deg, #6c63ff, #00d4aa);
+  h1 em {
+    font-style: italic;
+    font-weight: 300;
+    background: linear-gradient(120deg, #7c6fff, #00c9a0 70%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .subtitle {
-    font-size: 16px;
-    color: var(--text-muted);
-    max-width: 560px;
-    line-height: 1.7;
+    margin-top: 22px;
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.75;
+    font-weight: 300;
   }
 
-  .progress-card {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-bottom: 40px;
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
   }
 
-  .progress-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--c2);
-    flex-shrink: 0;
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
   }
 
-  .progress-text { flex: 1; }
-  .progress-text strong { font-size: 14px; font-weight: 500; display: block; margin-bottom: 3px; }
-  .progress-text span { font-size: 13px; color: var(--text-muted); }
-
-  .progress-pct {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--c2);
-  }
-
+  /* ── Domain cards ── */
   .domain {
     border: 0.5px solid var(--border);
-    border-radius: 16px;
-    margin-bottom: 8px;
+    border-radius: 12px;
+    margin-bottom: 6px;
     overflow: hidden;
-    transition: border-color 0.2s, background 0.2s;
     cursor: pointer;
+    transition: border-color 0.18s;
   }
 
-  .domain:hover { border-color: var(--border-hover); }
-  .domain.open { border-color: var(--border-hover); }
+  .domain:hover        { border-color: var(--border-h); }
+  .domain.open         { border-color: var(--border-h); }
 
   .domain-header {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     padding: 18px 20px;
     user-select: none;
   }
 
   .domain-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    width: 32px;
-    height: 32px;
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 400;
+    font-style: italic;
+    width: 36px;
+    height: 36px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    letter-spacing: -0.02em;
   }
 
-  .domain-info { flex: 1; min-width: 0; }
+  .domain-info  { flex: 1; min-width: 0; }
 
   .domain-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
   }
 
   .domain-desc {
-    font-size: 13px;
-    color: var(--text-muted);
+    font-size: 12px;
+    color: var(--muted);
     margin-top: 2px;
-  }
-
-  .badge-you {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 99px;
-    background: var(--c2bg);
-    color: var(--c2);
-    border: 0.5px solid var(--c2b);
-    letter-spacing: 0.03em;
-    white-space: nowrap;
+    font-weight: 300;
   }
 
   .badge-tag {
-    font-size: 11px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 10px;
     font-weight: 500;
     padding: 3px 10px;
     border-radius: 99px;
     white-space: nowrap;
     flex-shrink: 0;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .chevron {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     flex-shrink: 0;
-    color: var(--text-dim);
-    transition: transform 0.25s;
+    color: var(--dim);
+    transition: transform 0.22s;
   }
 
   .domain.open .chevron { transform: rotate(90deg); }
 
+  /* ── Topics ── */
   .topics {
     display: none;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 6px;
     padding: 0 20px 20px;
-    animation: fadeIn 0.2s ease;
+    animation: reveal 0.18s ease;
   }
 
   .domain.open .topics { display: grid; }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-6px); }
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: none; }
   }
 
   .topic {
     background: var(--surface2);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 12px 14px;
     border: 0.5px solid var(--border);
-    transition: border-color 0.15s;
+    transition: border-color 0.14s;
   }
 
-  .topic:hover { border-color: var(--border-hover); }
+  .topic:hover { border-color: var(--border-h); }
 
   .topic-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 13px;
     font-weight: 500;
     margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    color: var(--text);
   }
 
   .topic-sub {
     font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.5;
+    color: var(--muted);
+    line-height: 1.55;
+    font-weight: 300;
   }
 
-  .tick {
-    font-size: 10px;
-    padding: 1px 6px;
-    border-radius: 99px;
-    background: var(--c2bg);
-    color: var(--c2);
-    border: 0.5px solid var(--c2b);
-    white-space: nowrap;
-  }
-
-  .deep-section { margin-top: 56px; }
-
-  .section-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 20px;
-  }
+  /* ── Deep dive ── */
+  .deep-section { margin-top: 60px; }
 
   .deep-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 10px;
+    border-radius: 12px;
+    padding: 26px 28px;
+    margin-bottom: 8px;
   }
 
   .deep-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 18px;
+    color: var(--muted);
   }
 
   .tree {
-    font-family: 'DM Mono', 'Courier New', monospace;
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.9;
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 2;
   }
 
-  .tree .branch { color: var(--text-dim); }
+  .tree .branch { color: var(--dim); }
   .tree .leaf   { color: var(--text); }
   .tree .leaf.hl { color: var(--c3l); }
 
   .unlisted-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 4px;
+    gap: 6px;
   }
 
+  /* ── Footer ── */
   .footer-note {
-    margin-top: 48px;
-    padding: 24px;
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: 16px;
-  }
-
-  .fn-rule {
-    width: 32px;
-    height: 2px;
-    background: linear-gradient(90deg, #6c63ff, #00d4aa);
-    border-radius: 2px;
-    margin-bottom: 16px;
+    margin-top: 56px;
+    padding-top: 36px;
+    border-top: 0.5px solid var(--border);
   }
 
   .fn-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 12px;
+    color: var(--text);
+    letter-spacing: -0.01em;
   }
 
   .fn-text {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.7;
-    max-width: 580px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 560px;
+    font-weight: 300;
   }
 
+  /* ── Per-domain colors ── */
   .d1 .domain-num { background: var(--c1bg); color: var(--c1l); border: 0.5px solid var(--c1b); }
   .d1 .badge-tag  { background: var(--c1bg); color: var(--c1l); border: 0.5px solid var(--c1b); }
-  .d1.open        { background: rgba(108,99,255,0.03); }
+  .d1.open        { background: rgba(124,111,255,0.025); }
 
   .d2 .domain-num { background: var(--c2bg); color: var(--c2l); border: 0.5px solid var(--c2b); }
   .d2 .badge-tag  { background: var(--c2bg); color: var(--c2l); border: 0.5px solid var(--c2b); }
-  .d2.open        { background: rgba(0,212,170,0.03); }
+  .d2.open        { background: rgba(0,201,160,0.025); }
 
   .d3 .domain-num { background: var(--c3bg); color: var(--c3l); border: 0.5px solid var(--c3b); }
   .d3 .badge-tag  { background: var(--c3bg); color: var(--c3l); border: 0.5px solid var(--c3b); }
-  .d3.open        { background: rgba(255,159,67,0.03); }
+  .d3.open        { background: rgba(245,158,11,0.025); }
 
   .d4 .domain-num { background: var(--c4bg); color: var(--c4l); border: 0.5px solid var(--c4b); }
   .d4 .badge-tag  { background: var(--c4bg); color: var(--c4l); border: 0.5px solid var(--c4b); }
-  .d4.open        { background: rgba(168,85,247,0.03); }
+  .d4.open        { background: rgba(168,85,247,0.025); }
 
   .d5 .domain-num { background: var(--c5bg); color: var(--c5l); border: 0.5px solid var(--c5b); }
   .d5 .badge-tag  { background: var(--c5bg); color: var(--c5l); border: 0.5px solid var(--c5b); }
-  .d5.open        { background: rgba(239,68,68,0.03); }
+  .d5.open        { background: rgba(244,63,94,0.025); }
 
   .d6 .domain-num { background: var(--c6bg); color: var(--c6l); border: 0.5px solid var(--c6b); }
   .d6 .badge-tag  { background: var(--c6bg); color: var(--c6l); border: 0.5px solid var(--c6b); }
-  .d6.open        { background: rgba(59,130,246,0.03); }
+  .d6.open        { background: rgba(59,130,246,0.025); }
 
   .d7 .domain-num { background: var(--c7bg); color: var(--c7l); border: 0.5px solid var(--c7b); }
   .d7 .badge-tag  { background: var(--c7bg); color: var(--c7l); border: 0.5px solid var(--c7b); }
-  .d7.open        { background: rgba(236,72,153,0.03); }
+  .d7.open        { background: rgba(236,72,153,0.025); }
 
   .d8 .domain-num { background: var(--c8bg); color: var(--c8l); border: 0.5px solid var(--c8b); }
   .d8 .badge-tag  { background: var(--c8bg); color: var(--c8l); border: 0.5px solid var(--c8b); }
-  .d8.open        { background: rgba(132,204,22,0.03); }
+  .d8.open        { background: rgba(34,197,94,0.025); }
 
   @media (max-width: 560px) {
     .topics        { grid-template-columns: 1fr; }
     .unlisted-grid { grid-template-columns: 1fr; }
-    .progress-card { flex-wrap: wrap; }
+    h1             { font-size: 38px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <!-- Header -->
   <div class="header">
-    <div class="eyebrow">Study Reference · Computer Networking</div>
-    <h1>The <span>Networking</span><br>Landscape</h1>
-    <p class="subtitle">Networking is not just 8 domains — each one has its own depth. This is the big picture, so you know where you are and where you can go.</p>
+    <div class="eyebrow">Computer Networking Reference</div>
+    <h1>The Networking<br>Landscape</h1>
+    <p class="subtitle">A structured map of everything networking covers — from the wire into your home to the submarine cables connecting continents. Eight domains, each with its own depth. Click any domain to explore.</p>
   </div>
 
-  <div class="progress-card">
-    <div class="progress-dot"></div>
-    <div class="progress-text">
-      <strong>Your current position</strong>
-      <span>You have covered Domains 1 and 2 — including hands-on FTTH experience from your internship.</span>
-    </div>
-    <div class="progress-pct">2 / 8</div>
-  </div>
+  <!-- Domains -->
+  <div class="section-label">Eight domains</div>
 
-  <!-- Domain 1 -->
+  <!-- 01 -->
   <div class="domain d1" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">01</div>
       <div class="domain-info">
-        <div class="domain-name">
-          Network Fundamentals
-          <span class="badge-you">covered</span>
-        </div>
-        <div class="domain-desc">The foundation of everything in networking</div>
+        <div class="domain-name">Network Fundamentals</div>
+        <div class="domain-desc">The foundation everything else is built on</div>
       </div>
       <span class="badge-tag">Foundation</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
-        <div class="topic-title">Core networking concepts <span class="tick">you</span></div>
-        <div class="topic-sub">LAN, WAN, MAN, topologies, and how data moves as packets across a network</div>
+        <div class="topic-title">Core networking concepts</div>
+        <div class="topic-sub">LAN, WAN, MAN, network topologies, and how data travels as packets</div>
       </div>
       <div class="topic">
         <div class="topic-title">OSI & TCP/IP models</div>
-        <div class="topic-sub">The 7-layer model explaining all network communication from physical to application</div>
+        <div class="topic-sub">The 7-layer model explaining every layer of network communication</div>
       </div>
       <div class="topic">
         <div class="topic-title">IP addressing</div>
-        <div class="topic-sub">IPv4, IPv6, subnetting, CIDR — how every device gets a unique address</div>
+        <div class="topic-sub">IPv4, IPv6, subnetting, and CIDR notation — giving every device an address</div>
       </div>
       <div class="topic">
-        <div class="topic-title">Network hardware <span class="tick">you</span></div>
-        <div class="topic-sub">Routers, switches, hubs, cables, and access points — the role of each device</div>
+        <div class="topic-title">Network hardware</div>
+        <div class="topic-sub">Routers, switches, hubs, access points — the role and difference of each</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 2 -->
+  <!-- 02 -->
   <div class="domain d2" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">02</div>
       <div class="domain-info">
-        <div class="domain-name">
-          Access Technology
-          <span class="badge-you">covered</span>
-        </div>
-        <div class="domain-desc">How end users connect to the ISP network</div>
+        <div class="domain-name">Access Technology</div>
+        <div class="domain-desc">How end users connect to the ISP network — the last mile</div>
       </div>
       <span class="badge-tag">Last Mile</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
-        <div class="topic-title">FTTH / Fiber optic <span class="tick">internship</span></div>
-        <div class="topic-sub">OLT, ODC, ODP, ONT — the full chain you saw in person during your PKL</div>
+        <div class="topic-title">FTTH / Fiber optic</div>
+        <div class="topic-sub">OLT, ODC, ODP, ONT — the full fiber chain from ISP to the subscriber's home</div>
       </div>
       <div class="topic">
-        <div class="topic-title">DSL & Cable <span class="tick">you</span></div>
-        <div class="topic-sub">Older copper-based technologies — DSL over phone lines, Cable over coaxial</div>
+        <div class="topic-title">DSL & Cable</div>
+        <div class="topic-sub">Older copper-based access — DSL over telephone lines, Cable over coaxial</div>
       </div>
       <div class="topic">
         <div class="topic-title">Wireless access (4G / 5G)</div>
-        <div class="topic-sub">Internet access via cellular networks — no physical cable at all</div>
+        <div class="topic-sub">Cellular internet access — from base stations to the mobile core network</div>
       </div>
       <div class="topic">
         <div class="topic-title">Satellite internet</div>
-        <div class="topic-sub">Starlink and similar services, reaching areas where cable infrastructure does not exist</div>
+        <div class="topic-sub">Low-earth orbit services like Starlink for areas beyond cable reach</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 3 -->
+  <!-- 03 -->
   <div class="domain d3" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">03</div>
       <div class="domain-info">
         <div class="domain-name">Network Protocols</div>
-        <div class="domain-desc">The languages devices use to communicate</div>
+        <div class="domain-desc">The agreed-upon languages devices use to communicate</div>
       </div>
       <span class="badge-tag">Protocols</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
@@ -473,233 +446,235 @@
         <div class="topic-sub">The core protocol suite of the internet — how packets are sent, received, and verified</div>
       </div>
       <div class="topic">
-        <div class="topic-title">DNS <span class="tick">you</span></div>
-        <div class="topic-sub">Translates human-readable domain names into IP addresses machines understand</div>
+        <div class="topic-title">DNS</div>
+        <div class="topic-sub">Translating human-readable domain names into IP addresses machines understand</div>
       </div>
       <div class="topic">
         <div class="topic-title">HTTP / HTTPS</div>
-        <div class="topic-sub">The protocol behind every website — HTTPS is the encrypted and secure version</div>
+        <div class="topic-sub">The request-response protocol behind every website — HTTPS adds encryption</div>
       </div>
       <div class="topic">
         <div class="topic-title">DHCP, FTP, SMTP, SSH</div>
-        <div class="topic-sub">Protocols for automatic IP assignment, file transfer, email delivery, and remote access</div>
+        <div class="topic-sub">Protocols for automatic IP assignment, file transfer, email, and remote access</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 4 -->
+  <!-- 04 -->
   <div class="domain d4" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">04</div>
       <div class="domain-info">
         <div class="domain-name">Routing & Switching</div>
-        <div class="domain-desc">The intelligence that decides where data goes</div>
+        <div class="domain-desc">The intelligence that decides where data goes and how it gets there</div>
       </div>
       <span class="badge-tag">Core Networking</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
         <div class="topic-title">Static & dynamic routing</div>
-        <div class="topic-sub">How routers choose the best path — static is configured manually, dynamic adjusts automatically</div>
+        <div class="topic-sub">How routers choose the best path — static is configured manually, dynamic adapts automatically</div>
       </div>
       <div class="topic">
         <div class="topic-title">OSPF, BGP, EIGRP</div>
-        <div class="topic-sub">Advanced routing protocols used by ISPs and large enterprises worldwide</div>
+        <div class="topic-sub">Advanced routing protocols used by ISPs and enterprises worldwide — BGP runs the internet</div>
       </div>
       <div class="topic">
-        <div class="topic-title">VLANs</div>
-        <div class="topic-sub">Logically separating networks on the same physical switch infrastructure</div>
+        <div class="topic-title">VLANs & switching</div>
+        <div class="topic-sub">Logically segmenting networks on the same physical switch — STP, EtherChannel, DTP</div>
       </div>
       <div class="topic">
         <div class="topic-title">MPLS & SD-WAN</div>
-        <div class="topic-sub">Advanced technologies for enterprise and ISP-scale wide area networks</div>
+        <div class="topic-sub">Advanced wide-area technologies for enterprise and ISP-scale networks</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 5 -->
+  <!-- 05 -->
   <div class="domain d5" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">05</div>
       <div class="domain-info">
         <div class="domain-name">Network Security</div>
-        <div class="domain-desc">Protecting networks from threats and unauthorized access</div>
+        <div class="domain-desc">Protecting networks from unauthorized access and attacks</div>
       </div>
       <span class="badge-tag">Security</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
         <div class="topic-title">Firewalls & ACLs</div>
-        <div class="topic-sub">Traffic gatekeepers — filtering what is allowed in and out of a network</div>
+        <div class="topic-sub">Traffic gatekeepers — filtering what is permitted in and out of a network segment</div>
       </div>
       <div class="topic">
         <div class="topic-title">VPN</div>
-        <div class="topic-sub">Encrypted tunnels for secure communication between two separate networks</div>
+        <div class="topic-sub">Encrypted tunnels for secure communication across untrusted networks</div>
       </div>
       <div class="topic">
-        <div class="topic-title">Network attacks</div>
-        <div class="topic-sub">DDoS, Man-in-the-Middle, ARP spoofing, port scanning — know the threat to build the defense</div>
+        <div class="topic-title">Attack vectors</div>
+        <div class="topic-sub">DDoS, Man-in-the-Middle, ARP spoofing, port scanning — understanding threats</div>
       </div>
       <div class="topic">
         <div class="topic-title">IDS / IPS & SIEM</div>
-        <div class="topic-sub">Systems that detect and prevent intrusions in real time across a network</div>
+        <div class="topic-sub">Detection and prevention systems that monitor and respond to intrusions in real time</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 6 -->
+  <!-- 06 -->
   <div class="domain d6" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">06</div>
       <div class="domain-info">
         <div class="domain-name">Wireless Networking</div>
-        <div class="domain-desc">Cable-free connectivity — Wi-Fi, cellular, and beyond</div>
+        <div class="domain-desc">Cable-free connectivity across Wi-Fi, cellular, and emerging standards</div>
       </div>
       <span class="badge-tag">Wireless</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
         <div class="topic-title">Wi-Fi standards</div>
-        <div class="topic-sub">Wi-Fi 5 (802.11ac), Wi-Fi 6 (802.11ax), Wi-Fi 6E — frequency bands and throughput differences</div>
+        <div class="topic-sub">802.11a/b/g/n/ac/ax — frequency bands, throughput, and the evolution to Wi-Fi 6E</div>
       </div>
       <div class="topic">
         <div class="topic-title">4G & 5G architecture</div>
-        <div class="topic-sub">From base stations to the core network — how cellular signals reach your device</div>
+        <div class="topic-sub">From base stations to the core network — how cellular infrastructure is structured</div>
       </div>
       <div class="topic">
         <div class="topic-title">Wireless security</div>
-        <div class="topic-sub">WPA2, WPA3 — encryption protocols that secure wireless connections</div>
+        <div class="topic-sub">WEP, WPA2, WPA3 — the history and current standards for securing wireless links</div>
       </div>
       <div class="topic">
         <div class="topic-title">Mesh & enterprise Wi-Fi</div>
-        <div class="topic-sub">Multiple access points that work together — used in malls, hotels, and campuses</div>
+        <div class="topic-sub">Multi-access-point deployments with roaming, used in campuses, hotels, and venues</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 7 -->
+  <!-- 07 -->
   <div class="domain d7" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">07</div>
       <div class="domain-info">
         <div class="domain-name">Cloud & Data Center Networking</div>
-        <div class="domain-desc">Massive-scale infrastructure behind modern internet services</div>
+        <div class="domain-desc">Hyperscale infrastructure behind modern internet services</div>
       </div>
       <span class="badge-tag">Hyperscale</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
         <div class="topic-title">Software Defined Networking</div>
-        <div class="topic-sub">Networks controlled by software rather than configuring hardware device by device</div>
+        <div class="topic-sub">Decoupling the control plane from hardware — networks managed by software at scale</div>
       </div>
       <div class="topic">
         <div class="topic-title">Load balancing & CDN</div>
-        <div class="topic-sub">Distributing traffic across servers — Netflix, YouTube, and TikTok all depend on this</div>
+        <div class="topic-sub">Distributing traffic across servers globally — the backbone of Netflix, YouTube, TikTok</div>
       </div>
       <div class="topic">
-        <div class="topic-title">AWS / GCP / Azure networking</div>
-        <div class="topic-sub">Virtual VPCs, subnets, security groups — networking that exists entirely in the cloud</div>
+        <div class="topic-title">Cloud networking</div>
+        <div class="topic-sub">Virtual VPCs, subnets, security groups, and peering on AWS, GCP, and Azure</div>
       </div>
       <div class="topic">
         <div class="topic-title">Submarine cables & IXPs</div>
-        <div class="topic-sub">Undersea fiber cables and Internet Exchange Points — the backbone of the global internet</div>
+        <div class="topic-sub">Undersea fiber and Internet Exchange Points — the physical backbone of the global internet</div>
       </div>
     </div>
   </div>
 
-  <!-- Domain 8 -->
+  <!-- 08 -->
   <div class="domain d8" onclick="toggle(this)">
     <div class="domain-header">
       <div class="domain-num">08</div>
       <div class="domain-info">
         <div class="domain-name">Network Engineering & Automation</div>
-        <div class="domain-desc">Designing, operating, and automating large networks</div>
+        <div class="domain-desc">Designing, operating, and automating production networks</div>
       </div>
       <span class="badge-tag">Engineering</span>
-      <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M5 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="topics">
       <div class="topic">
         <div class="topic-title">Network design & architecture</div>
-        <div class="topic-sub">Designing scalable, redundant topologies that can grow with an organization</div>
+        <div class="topic-sub">Building scalable, redundant topologies — three-tier, spine-leaf, and collapsed core</div>
       </div>
       <div class="topic">
         <div class="topic-title">Troubleshooting</div>
-        <div class="topic-sub">Ping, traceroute, Wireshark — systematically finding and resolving network issues</div>
+        <div class="topic-sub">Ping, traceroute, Wireshark, and systematic methodology for diagnosing failures</div>
       </div>
       <div class="topic">
         <div class="topic-title">Certifications</div>
-        <div class="topic-sub">Cisco CCNA / CCNP, CompTIA Network+, Mikrotik MTCNA — recognized industry credentials</div>
+        <div class="topic-sub">Cisco CCNA / CCNP, CompTIA Network+, Mikrotik MTCNA — industry-recognized paths</div>
       </div>
       <div class="topic">
         <div class="topic-title">Network automation</div>
-        <div class="topic-sub">Python, Ansible, and Terraform for configuring thousands of devices at once</div>
+        <div class="topic-sub">Python, Ansible, Terraform — configuring and managing thousands of devices programmatically</div>
       </div>
     </div>
   </div>
 
   <!-- Deep dive -->
   <div class="deep-section">
-    <div class="section-label">How deep does each domain go?</div>
+    <div class="section-label" style="margin-top: 0">How deep does a single domain go?</div>
 
     <div class="deep-card">
-      <div class="deep-title">Example — Domain 04: Routing & Switching fully expanded</div>
+      <div class="deep-title">Domain 04 — Routing & Switching, fully expanded</div>
       <div class="tree">
         <span class="branch">Routing &amp; Switching</span><br>
         <span class="branch">│</span><br>
         <span class="branch">├── Layer 2</span><br>
         <span class="branch">│   ├── </span><span class="leaf">Ethernet &amp; MAC addressing</span><br>
-        <span class="branch">│   ├── </span><span class="leaf">STP, RSTP, MSTP</span><br>
-        <span class="branch">│   ├── </span><span class="leaf">VLAN, VTP, DTP</span><br>
-        <span class="branch">│   └── </span><span class="leaf">EtherChannel / LACP</span><br>
+        <span class="branch">│   ├── </span><span class="leaf">STP, RSTP, MSTP — loop prevention</span><br>
+        <span class="branch">│   ├── </span><span class="leaf">VLAN, VTP, DTP — logical segmentation</span><br>
+        <span class="branch">│   └── </span><span class="leaf">EtherChannel / LACP — link aggregation</span><br>
         <span class="branch">│</span><br>
         <span class="branch">├── Layer 3</span><br>
         <span class="branch">│   ├── </span><span class="leaf">Static routing</span><br>
-        <span class="branch">│   ├── </span><span class="leaf hl">OSPF  ←  can be a standalone semester course</span><br>
-        <span class="branch">│   ├── </span><span class="leaf hl">BGP   ←  the protocol that runs the entire internet</span><br>
+        <span class="branch">│   ├── </span><span class="leaf hl">OSPF  ←  can fill an entire semester on its own</span><br>
+        <span class="branch">│   ├── </span><span class="leaf hl">BGP   ←  the protocol that holds the internet together</span><br>
         <span class="branch">│   ├── </span><span class="leaf">EIGRP, IS-IS</span><br>
-        <span class="branch">│   └── </span><span class="leaf">Policy-based routing</span><br>
+        <span class="branch">│   └── </span><span class="leaf">Policy-based routing, route redistribution</span><br>
         <span class="branch">│</span><br>
         <span class="branch">├── MPLS</span><br>
-        <span class="branch">│   ├── </span><span class="leaf">Label switching</span><br>
-        <span class="branch">│   └── </span><span class="leaf">VPN over MPLS</span><br>
+        <span class="branch">│   ├── </span><span class="leaf">Label switching &amp; forwarding</span><br>
+        <span class="branch">│   ├── </span><span class="leaf">Traffic engineering</span><br>
+        <span class="branch">│   └── </span><span class="leaf">Layer 3 VPN over MPLS</span><br>
         <span class="branch">│</span><br>
         <span class="branch">└── SD-WAN</span><br>
-        <span class="branch">    ├── </span><span class="leaf">Overlay networking</span><br>
+        <span class="branch">    ├── </span><span class="leaf">Overlay &amp; underlay architecture</span><br>
+        <span class="branch">    ├── </span><span class="leaf">Viptela, Meraki, FortiGate — vendor implementations</span><br>
         <span class="branch">    └── </span><span class="leaf">Zero-touch provisioning</span>
       </div>
     </div>
 
-    <div class="deep-card" style="margin-top:10px">
-      <div class="deep-title">Areas most people do not realise belong to networking</div>
+    <div class="deep-card" style="margin-top: 8px;">
+      <div class="deep-title">Areas most people do not realize fall under networking</div>
       <div class="unlisted-grid">
         <div class="topic">
           <div class="topic-title">Undersea cables</div>
-          <div class="topic-sub">Over 500 submarine cables connect every continent at the ocean floor</div>
+          <div class="topic-sub">Over 500 submarine cables connect every continent at the ocean floor — they carry ~99% of international data</div>
         </div>
         <div class="topic">
           <div class="topic-title">Satellite networking</div>
-          <div class="topic-sub">Starlink, delay-tolerant networking, and communication beyond Earth orbit</div>
+          <div class="topic-sub">Low-earth orbit constellations, delay-tolerant networking, and deep-space communication protocols</div>
         </div>
         <div class="topic">
-          <div class="topic-title">IoT networking</div>
-          <div class="topic-sub">LoRaWAN, Zigbee, Z-Wave — lightweight protocols built for sensors and machines</div>
+          <div class="topic-title">IoT & sensor networks</div>
+          <div class="topic-sub">LoRaWAN, Zigbee, Z-Wave — lightweight protocols built specifically for low-power devices and sensors</div>
         </div>
         <div class="topic">
           <div class="topic-title">AI-driven networking</div>
-          <div class="topic-sub">Networks that monitor, predict, and optimize themselves using machine learning</div>
+          <div class="topic-sub">Self-optimizing networks that use machine learning to predict congestion and reroute traffic automatically</div>
         </div>
         <div class="topic">
           <div class="topic-title">Quantum networking</div>
-          <div class="topic-sub">Quantum key distribution and entanglement-based communication — active research area</div>
+          <div class="topic-sub">Quantum key distribution and entanglement-based communication — still active research, becoming real</div>
         </div>
         <div class="topic">
           <div class="topic-title">Internet Exchange Points</div>
-          <div class="topic-sub">Physical locations where all ISPs meet and exchange traffic with each other</div>
+          <div class="topic-sub">Physical locations where ISPs and content providers meet to exchange traffic — critical internet infrastructure</div>
         </div>
       </div>
     </div>
@@ -707,16 +682,13 @@
 
   <!-- Footer -->
   <div class="footer-note">
-    <div class="fn-rule"></div>
-    <div class="fn-title">You do not need to master all of it</div>
-    <p class="fn-text">Senior engineers at Google and Cisco specialize in one area — not all eight. What matters is understanding the full map first, then choosing where to go deep. Your internship gave you something most students never get: real infrastructure experience before the theory. That is a strong foundation to build on.</p>
+    <p class="fn-title">No one masters all of it.</p>
+    <p class="fn-text">Senior engineers at the largest network companies in the world specialize deeply in one or two domains — not all eight. The goal is not to learn everything at once, but to understand the full map clearly enough to know where you want to go deep. Start with the fundamentals, follow what interests you, and the rest will follow.</p>
   </div>
 
 </div>
 <script>
-  function toggle(el) {
-    el.classList.toggle('open');
-  }
+  function toggle(el) { el.classList.toggle('open'); }
 </script>
 </body>
 </html>
